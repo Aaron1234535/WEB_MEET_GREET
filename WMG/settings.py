@@ -6,7 +6,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-change-this'
 
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+
+# ✅ FIXED
+ALLOWED_HOSTS = ['web-meet-greet.onrender.com', 'localhost', '127.0.0.1']
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -18,8 +21,13 @@ INSTALLED_APPS = [
     'Enigma.apps.EnigmaConfig',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # ✅ ADD THIS (VERY IMPORTANT)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -28,7 +36,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'WMG.urls'
+
 
 TEMPLATES = [
     {
@@ -46,7 +56,9 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'WMG.wsgi.application'
+
 
 DATABASES = {
     'default': {
@@ -55,6 +67,7 @@ DATABASES = {
     }
 }
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -62,19 +75,31 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UCT'
+TIME_ZONE = 'UTC'   # ✅ fixed typo
 USE_I18N = True
 USE_TZ = True
 
+
+# ✅ STATIC FILES (IMPORTANT FOR RENDER)
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# ✅ REQUIRED FOR WHITENOISE
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# ✅ MEDIA FILES
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

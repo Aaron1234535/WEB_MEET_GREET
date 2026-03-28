@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Events</h2>
+
+<h3>📌 Events I Host</h3>
+{% for event in hosted_events %}
+    <div class="event-card">
+        <h4>{{ event.title }}</h4>
+        <p>{{ event.event_date|date:"M d, Y H:i" }}</p>
+        <p>👥 Attendees: {{ event.attendees.count }}</p>
+    </div>
+{% empty %}
+    <p>You haven’t created any events yet.</p>
+{% endfor %}
+
+<hr style="margin:30px 0;">
+
+<h3>🤝 Events I Joined</h3>
+{% for event in joined_events %}
+    <div class="event-card">
+        <h4>{{ event.title }}</h4>
+        <p>{{ event.event_date|date:"M d, Y H:i" }}</p>
+        <p>👤 Host: {{ event.created_by.username }}</p>
+    </div>
+{% empty %}
+    <p>You haven’t joined any events yet.</p>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventSocial</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<nav>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="toggle-circle"></div>
+        </div>
+        <strong>EventSocial</strong>
+    </div>
+
+    <div style="display:flex; gap:16px; align-items:center;">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'event_list' %}">Events</a>
+        <a href="{% url 'create_event' %}">Create</a>
+        <a href="{% url 'my_events' %}">My Events</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link-button">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script>
+    const toggleTheme = () => {
+        document.body.classList.toggle("dark");
+        localStorage.setItem(
+            "theme",
+            document.body.classList.contains("dark") ? "dark" : "light"
+        );
+    };
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+    }
+</script>
+
+</body>
+</html>

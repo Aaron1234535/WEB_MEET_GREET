@@ -1,0 +1,22 @@
+{% extends "public_base.html" %}
+{% block content %}
+
+<h2 class="page-title">Upcoming Events</h2>
+
+<div class="event-grid">
+    {% for event in events %}
+        <div class="event-card">
+            
+            {% if event.image %}
+                <img src="{{ event.image.url }}" class="event-image">
+            {% endif %}
+
+            <h3>{{ event.title }}</h3>
+
+        </div>
+    {% empty %}
+        <p class="empty-text">No upcoming events yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

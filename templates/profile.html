@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h2 class="page-title">My Profile</h2>
+
+<div class="event-detail">
+    {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" class="profile-pic-large">
+    {% else %}
+        <img src="{% static 'default.png' %}" class="profile-pic-large">
+    {% endif %}
+
+    <h3>{{ request.user.username }}</h3>
+
+    {% if profile.bio %}
+        <p class="host-bio">{{ profile.bio }}</p>
+    {% else %}
+        <p class="host-bio">No bio yet.</p>
+    {% endif %}
+
+    <a class="btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
+</div>
+{% endblock %}

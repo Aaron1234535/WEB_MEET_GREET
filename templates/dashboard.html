@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="dash-hero">
+    <div class="dash-hero__intro">
+        <p class="eyebrow">Your social pulse</p>
+        <h1 class="dash-title">Dashboard</h1>
+        <p class="dash-subtitle">
+            Plan, discover, and host gatherings that bring your community together.
+        </p>
+        <div class="dash-actions">
+            <a class="btn-primary" href="{% url 'create_event' %}">Create Event</a>
+            <a class="btn-ghost" href="{% url 'event_list' %}">Explore Events</a>
+        </div>
+        <div class="status-row">
+            <span class="status-dot"></span>
+            <span>Updates are live and refreshed today.</span>
+        </div>
+    </div>
+
+    <div class="dash-hero__panel">
+        <div class="metric-grid">
+            <div class="metric-card">
+                <span class="metric-label">Events Live</span>
+                <span class="metric-value">{{ events|length }}</span>
+                <span class="metric-sub">Available to browse right now</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Next Up</span>
+                {% if events %}
+                    <span class="metric-value metric-value--text">{{ events.0.title }}</span>
+                    <span class="metric-sub">Tap for details below</span>
+                {% else %}
+                    <span class="metric-value">—</span>
+                    <span class="metric-sub">Create your first event</span>
+                {% endif %}
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Hosts Online</span>
+                <span class="metric-value metric-value--text">Community</span>
+                <span class="metric-sub">Follow creators you trust</span>
+            </div>
+        </div>
+
+        <div class="mini-board">
+            <div class="mini-board__head">
+                <span>Quick Tools</span>
+                <span class="badge">New</span>
+            </div>
+            <div class="mini-board__grid">
+                <a class="tool-card" href="{% url 'my_events' %}">
+                    <span class="tool-title">Manage</span>
+                    <span class="tool-sub">Your events</span>
+                </a>
+                <a class="tool-card" href="{% url 'profile' %}">
+                    <span class="tool-title">Profile</span>
+                    <span class="tool-sub">Update bio</span>
+                </a>
+                <a class="tool-card" href="{% url 'event_list' %}">
+                    <span class="tool-title">Discover</span>
+                    <span class="tool-sub">Browse feed</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dash-toolbar">
+    <div class="search-shell">
+        <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Zm9.5 2.1-4.2-4.2" />
+            </svg>
+        </span>
+        <input type="text" placeholder="Search events, hosts, or locations">
+        <span class="search-kbd">/</span>
+    </div>
+    <div class="filter-pills">
+        <button class="pill active" type="button">All</button>
+        <button class="pill" type="button">Tonight</button>
+        <button class="pill" type="button">This Week</button>
+        <button class="pill" type="button">Online</button>
+        <button class="pill" type="button">Local</button>
+    </div>
+</section>
+
+<div class="dash-layout">
+    <section class="dash-main">
+        <div class="section-head">
+            <div>
+                <h2>Upcoming Events</h2>
+                <p>Curated from your community</p>
+            </div>
+            <a class="btn-ghost" href="{% url 'event_list' %}">View all</a>
+        </div>
+
+        <div class="event-grid">
+            {% for event in events %}
+            <article class="event-card">
+                <div class="event-card__media">
+                    {% if event.image %}
+                        <img src="{{ event.image.url }}" class="event-image" alt="{{ event.title }}">
+                    {% else %}
+                        <div class="event-image event-image--placeholder">
+                            <span class="placeholder-icon"></span>
+                        </div>
+                    {% endif %}
+                    <span class="event-badge">Open</span>
+                </div>
+                <div class="event-card__body">
+                    <div class="event-card__meta">
+                        <span class="badge">{{ event.event_date|date:"M d" }}</span>
+                        <span class="meta-dot"></span>
+                        <span>{{ event.location|default:"Online" }}</span>
+                    </div>
+                    <h3>{{ event.title }}</h3>
+                    <p>{{ event.description|default:"Details coming soon."|truncatewords:18 }}</p>
+                    <div class="event-card__actions">
+                        <a href="{% url 'event_detail' event.id %}" class="btn-primary">View Details</a>
+                        <button class="btn-ghost" type="button">Save</button>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <h3>No events yet</h3>
+                <p>Create the first event and invite your community.</p>
+                <a class="btn-primary" href="{% url 'create_event' %}">Create Event</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <aside class="dash-side">
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Tonight's Lineup</h3>
+                <span class="badge">Live</span>
+            </div>
+            <div class="panel-list">
+                {% for event in events|slice:":3" %}
+                <div class="side-event">
+                    <div class="side-event__time">
+                        <span>{{ event.event_date|date:"M d" }}</span>
+                        <span class="muted">{{ event.location|default:"Online" }}</span>
+                    </div>
+                    <div class="side-event__info">
+                        <strong>{{ event.title }}</strong>
+                        <a href="{% url 'event_detail' event.id %}">View</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="muted">No events scheduled yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Community Pulse</h3>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-dot"></span>
+                    <div>
+                        <strong>New hosts</strong>
+                        <p>Follow organizers and get notified about their events.</p>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-dot"></span>
+                    <div>
+                        <strong>Photo highlights</strong>
+                        <p>Share a moment from your favorite gatherings.</p>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-dot"></span>
+                    <div>
+                        <strong>Suggestions</strong>
+                        <p>Explore tech talks, pop-ups, and creative meetups.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+{% endblock %}

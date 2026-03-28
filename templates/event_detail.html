@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="event-detail">
+
+    <!-- Event Banner -->
+    {% if event.image %}
+        <img src="{{ event.image.url }}" class="event-banner">
+    {% endif %}
+
+    <!-- Event Info -->
+    <h2>{{ event.title }}</h2>
+    <p>{{ event.description }}</p>
+    <p><strong>Location:</strong> {{ event.location }}</p>
+    <p><strong>Date:</strong> {{ event.event_date }}</p>
+    <p><strong>Host:</strong> {{ event.created_by.username }}</p>
+
+    <!-- Like + RSVP Section -->
+    <div style="display:flex; gap:15px; margin:20px 0; flex-wrap:wrap;">
+
+        <!-- Like -->
+        <form method="post" action="{% url 'like_event' event.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">
+                {% if user in event.likes.all %}
+                    ❤️ Unlike
+                {% else %}
+                    🤍 Like
+                {% endif %}
+                ({{ event.total_likes }})
+            </button>
+        </form>
+
+        <!-- RSVP -->
+        <form method="post" action="{% url 'rsvp_event' event.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-secondary">
+                {% if user in event.attendees.all %}
+                    Cancel RSVP
+                {% else %}
+                    RSVP
+                {% endif %}
+            </button>
+        </form>
+
+    </div>
+
+    <hr style="margin:30px 0;">
+
+    <!-- Gallery -->
+    <h3>📸 Event Gallery</h3>
+
+    <div class="event-gallery">
+        {% for photo in photos %}
+            <img src="{{ photo.image.url }}">
+        {% empty %}
+            <p>No photos yet.</p>
+        {% endfor %}
+    </div>
+
+    <h4 style="margin-top:20px;">Add Photo</h4>
+
+    <form method="post"
+          enctype="multipart/form-data"
+          action="{% url 'upload_event_photo' event.id %}">
+        {% csrf_token %}
+        {{ photo_form.as_p }}
+        <button type="submit" class="btn-primary">Upload</button>
+    </form>
+
+    <hr style="margin:40px 0;">
+
+    <!-- Comments Section -->
+    <h3>💬 Comments</h3>
+
+    <!-- Comment Form -->
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.text }}
+        <button type="submit"
+                name="comment_submit"
+                class="btn-primary"
+                style="margin-top:10px;">
+            Post Comment
+        </button>
+    </form>
+
+    <div style="margin-top:30px;">
+        {% for comment in comments %}
+            <div class="event-card" style="margin-bottom:15px;">
+                <strong>{{ comment.user.username }}</strong>
+                <p>{{ comment.text }}</p>
+                <small>{{ comment.created_at }}</small>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

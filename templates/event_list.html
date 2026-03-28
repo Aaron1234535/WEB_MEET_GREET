@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title">All Events</h2>
+
+{% for event in events %}
+<div class="event-card">
+
+    {% if event.image %}
+        <img src="{{ event.image.url }}" class="event-image">
+    {% endif %}
+
+    <h3>{{ event.title }}</h3>
+    <p>{{ event.description }}</p>
+
+    <a href="{% url 'event_detail' event.id %}" class="btn-primary">
+        View Details
+    </a>
+
+</div>
+{% empty %}
+<p>No events available.</p>
+{% endfor %}
+
+{% endblock %}

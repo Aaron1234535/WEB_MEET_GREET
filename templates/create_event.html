@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="form-container">
+    <h2>Create New Event</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="form-group">
+            <label for="id_title">Event Title</label>
+            {{ form.title }}
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+            <label for="id_location">Location</label>
+            {{ form.location }}
+        </div>
+
+        <!-- Date & Time -->
+        <div class="form-group">
+            <label for="id_event_date">Event Date & Time</label>
+            {{ form.event_date }}
+        </div>
+
+        <!-- Event Image -->
+        <div class="form-group">
+            <label for="id_image">Event Image</label>
+            {{ form.image }}
+        </div>
+
+        <!-- Display Errors -->
+        {% if form.errors %}
+            <div class="form-errors">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn-primary">
+            Create Event
+        </button>
+    </form>
+</div>
+
+{% endblock %}
